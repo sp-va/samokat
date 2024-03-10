@@ -3,6 +3,7 @@ from typing import Any
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email: str, password: str | None = None):
         if email is None:
@@ -20,3 +21,13 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email: models.EmailField = models.EmailField(unique=True)
+    is_staff: models.BooleanField = models.BooleanField(default=False)
+    USERNAME_FIELD = "email"
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email

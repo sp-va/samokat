@@ -7,6 +7,6 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_PORT: str
     class Config:
-        env_file = './.env'
+        env_file = '../.env'
 
 settings = Settings()
