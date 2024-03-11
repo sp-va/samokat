@@ -32,13 +32,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'users.apps.UsersConfig',
+    'products.apps.ProductsConfig',
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -75,15 +79,15 @@ WSGI_APPLICATION = 'samokat.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-from db_settings import settings
+from db_settings import connection_settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'USER': settings.DB_USER,
-        'PASSWORD': settings.DB_PASSWORD,
-        'HOST': settings.DB_HOST,
-        'PORT': settings.DB_PORT,
-        'NAME': settings.DB_NAME,
+        'USER': connection_settings.DB_USER,
+        'PASSWORD': connection_settings.DB_PASSWORD,
+        'HOST': connection_settings.DB_HOST,
+        'PORT': connection_settings.DB_PORT,
+        'NAME': connection_settings.DB_NAME,
     }
 }
 
@@ -130,3 +134,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    "USER_ID_FIELD": "email", # Плохая практика использовать email, так как его можно перепривязать для аккаунта
+}
