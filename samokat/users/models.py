@@ -14,7 +14,7 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def create_superuser(self, email: str, password: str | None = "123"):
+    def create_superuser(self, email: str, password: str):
         user: Any = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
@@ -23,7 +23,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email: models.EmailField = models.EmailField(unique=True)
+    email: models.EmailField = models.EmailField(unique=True, primary_key=True)
     is_staff: models.BooleanField = models.BooleanField(default=False)
     USERNAME_FIELD = "email"
 
