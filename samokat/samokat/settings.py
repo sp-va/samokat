@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import datetime
 import os
 from pathlib import Path
 
@@ -141,6 +142,9 @@ REST_FRAMEWORK = {
     )
 }
 
+
 SIMPLE_JWT = {
     "USER_ID_FIELD": "email", # Плохая практика использовать email, так как его можно перепривязать для аккаунта
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(hours=5),
 }
