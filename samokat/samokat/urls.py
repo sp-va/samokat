@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-from rest_framework_simplejwt.views import (TokenRefreshView, TokenObtainPairView)
 from rest_framework import routers
+from rest_framework_simplejwt.views import (TokenRefreshView, TokenObtainPairView)
 
 from products.views import ProductViewSet
+from .views import RootAPIView
 
 router = routers.DefaultRouter()
 router.register("products", ProductViewSet)
@@ -28,6 +28,7 @@ router.register("products", ProductViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('', RootAPIView.as_view(), name='redirect from root to auth'),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
