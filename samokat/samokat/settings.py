@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'users.apps.UsersConfig',
     'products.apps.ProductsConfig',
+    'carts.apps.CartsConfig',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
