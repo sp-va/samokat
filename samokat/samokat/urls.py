@@ -20,6 +20,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import (TokenRefreshView, TokenObtainPairView)
 
 from products.views import GetProductsAPIView, AdminProductsAPIView
+from users.views import RegisterUser
 from .views import RootAPIView
 
 urlpatterns = [
@@ -33,4 +34,5 @@ urlpatterns = [
     path('', RootAPIView.as_view(), name='redirect from root to auth'),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('register/', RegisterUser.as_view(), name='Регистрация обычного юзера'),
 ]
