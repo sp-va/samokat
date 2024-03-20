@@ -21,15 +21,17 @@ from rest_framework_simplejwt.views import (TokenRefreshView, TokenObtainPairVie
 
 from products.views import GetProductsAPIView, AdminProductsAPIView
 from users.views import RegisterUser
+from carts.views import CartsAPIView
 from .views import RootAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('products/', GetProductsAPIView.as_view(), name="Список всех продуктов"),
-
     path('products/manage/', AdminProductsAPIView.as_view(), name="Добавить новый продукт"),
     path('products/manage/<uuid:id>/', AdminProductsAPIView.as_view(), name="Добавить новый продукт"),
+
+    path('cart/', CartsAPIView.as_view(), name="Добавить продукты в корзину"),
 
     path('', RootAPIView.as_view(), name='redirect from root to auth'),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
