@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
+from django.core.exceptions import PermissionDenied
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,9 +14,11 @@ from users.models import User
 
 
 class CartsAPIView(APIView):
-    # authentication_classes = [JWTAuthentication,]
-    # permission_classes = [IsAdminOrOwner,]
+    authentication_classes = [JWTAuthentication,]
+    permission_classes = [IsAdminOrOwner,]
     def get(self, request):
+        if not request.user.is_superuser:
+            raise PermissionDenied
         query = OrderCart.objects.all()
         serializer = OrderCartSerializer(query, many=True)
         return Response(serializer.data)
@@ -29,18 +32,13 @@ class CartsAPIView(APIView):
             owner = User.objects.get(email=owner_email)
             order_cart = OrderCart.objects.create(owner=owner)
 
+        self.check_object_permissions(request, order_cart)
         order_cart.products.add(*products)
         dict_model = model_to_dict(order_cart)
         serializer = OrderCartSerializer(data=dict_model)
 
         if serializer.is_valid():
-            # owner = User.objects.get(email=serializer.data["owner"])
-            # cart_object = OrderCart.objects.get_or_create(owner=owner)
-            # cart_object.save()
             serializer.save()
-
-            # if not cart_object:
-            #     create_cart = OrderCart.objects.create(owner=owner)
-            #     create_cart.save()
             return Response(serializer.data)
-        return Response(serializer.errors)
+        return Response(serializer.errors) # Здесь при добавлении товара в корзину возвращается ошибка с неверным
+                                            # форматом UUID, но при этом все нормально добавляется в БД
