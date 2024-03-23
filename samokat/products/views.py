@@ -1,10 +1,13 @@
 import uuid
 
-from rest_framework import viewsets, status, generics
+from django.db.models import Q
+
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 
 from products.serializers import ProductSerializer
 from products.models import Product
@@ -31,3 +34,13 @@ class AdminProductsAPIView(APIView):
         product = Product.objects.get(id=id)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductsSearch(ListAPIView):
+    def get(self, request):
+        query = request.query_params.get("q", "")
+        filter_str = Q(name__icontains=query)
+        queryset = Product.objects.filter(filter_str).values("name", "id")
+        serializer = ProductSerializer(data=queryset, many=True)
+        return Response(serializer.initial_data)
+
