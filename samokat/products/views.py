@@ -1,5 +1,6 @@
 import uuid
 
+from django.core.exceptions import FieldError
 from django.db.models import Q
 
 from rest_framework import status, generics
@@ -38,9 +39,28 @@ class AdminProductsAPIView(APIView):
 
 class ProductsSearch(ListAPIView):
     def get(self, request):
-        query = request.query_params.get("q", "")
-        filter_str = Q(name__icontains=query)
-        queryset = Product.objects.filter(filter_str).values("name", "id")
-        serializer = ProductSerializer(data=queryset, many=True)
-        return Response(serializer.initial_data)
+        try:
+            query = request.query_params.get("q")
+            filter_str = Q(name__icontains=query)
+            queryset = Product.objects.filter(filter_str).values("name", "id")
+            serializer = ProductSerializer(data=queryset, many=True)
+            return Response(serializer.initial_data)
+        except ValueError:
+            raise ValueError("Отсутствует строка q для фильтрации")
+
+
+class SortedProducts(ListAPIView):
+    def get(self, request):
+        try:
+            order_by = request.query_params.get("field")
+            objects = Product.objects.order_by(order_by).values("id", "name", "description", "shelf_life", "manufacturer")
+            serializer = ProductSerializer(data=objects, many=True)
+            return Response(serializer.initial_data)
+        except FieldError:
+            raise FieldError("Отсутствует строка field для фильтрации")
+
+
+
+
+
 

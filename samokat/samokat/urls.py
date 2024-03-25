@@ -19,7 +19,7 @@ from django.urls import path
 
 from rest_framework_simplejwt.views import (TokenRefreshView, TokenObtainPairView)
 
-from products.views import GetProductsAPIView, AdminProductsAPIView, ProductsSearch
+from products.views import GetProductsAPIView, AdminProductsAPIView, ProductsSearch, SortedProducts
 from users.views import RegisterUser
 from carts.views import CartsAPIView
 from .views import RootAPIView
@@ -29,6 +29,7 @@ urlpatterns = [
 
     path('products/', GetProductsAPIView.as_view(), name="Список всех продуктов"),
     path('products/search/', ProductsSearch.as_view(), name="Поиск продуктов по имени"),
+    path('products/order_by/', SortedProducts.as_view(), name="Список всех продуктов, отсортированных по конкретному полю"),
     path('products/manage/', AdminProductsAPIView.as_view(), name="Добавить новый продукт"),
     path('products/manage/<uuid:id>/', AdminProductsAPIView.as_view(), name="Добавить новый продукт"),
 
